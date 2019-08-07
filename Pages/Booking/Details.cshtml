@@ -1,0 +1,210 @@
+@page
+@model BookingApp.Pages.Booking.DetailsModel
+@{
+ViewData["Title"] = "Details";
+Layout = null;
+}
+<form method="POST">
+    <input type="hidden" asp-for="Contract.Id" />
+    <h1>Khách hàng</h1>
+    <a class="toggle" data-toggle="collapse" href="#information" aria-controls="information">Thông tin chung</a>
+    <div id="information" class="collapse show">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td scope="row"><span class="helper"></span>Họ tên: </td>
+                    <td><input class="form-control" asp-for="Contract.FullName"></input></td>
+                </tr>
+                <tr>
+                    <td scope=" row">Số điện thoại: </td>
+                    <td><input class="form-control" asp-for="Contract.PhoneNumber"></input></td>
+                </tr>
+                <tr>
+                    <td scope=" row">Email: </td>
+                    <td><input class="form-control" asp-for="Contract.Email"></input></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a class=" toggle" data-toggle="collapse" href="#booking" aria-controls="booking">Thông tin căn hộ</a>
+    <div class="collapse hide" id="booking">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td scope="row">Loại căn hộ: </td>
+                    <td>Studio</td>
+                </tr>
+                <tr>
+                    <td scope="row">Yêu cầu: </td>
+                    <td>
+                        <ul class="list">
+                            <li>Hướng: Bắc</li>
+                            <li>View: Công viên</li>
+                            <li>Tầng: 15, 25, 35</li>
+                            <li>Diện tích: 68m²</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a class="toggle" data-toggle="collapse" href="#passport" aria-controls="passport">Thông tin hộ
+        chiếu</a>
+    <div class="collapse hide" id="passport">
+        <table class="table">
+            <tbody>
+                <tr>
+                    <td scope="row">Số cmnd: </td>
+                    <td>290988990</td>
+                </tr>
+                <tr>
+                    <td scope="row">Ngày cấp: </td>
+                    <td>31/02/2020</td>
+                </tr>
+                <tr>
+                    <td scope="row">Nơi cấp: </td>
+                    <td>CA. TPHCM</td>
+                </tr>
+                <tr>
+                    <td scope="row">Quốc tịch: </td>
+                    <td>Việt Nam</td>
+                </tr>
+                <tr>
+                    <td>Ảnh mặt trước: </td>
+                    <td><img src="~/img/passport/sample-front.png" alt="ảnh mặt trước"></td>
+                </tr>
+                <tr>
+                    <td>Ảnh mặt sau: </td>
+                    <td><img src="~/img/passport/sample-back.jpg" alt="ảnh mặt sau"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</form>
+<div class="btn-content">
+    <button onclick="discardChanges(this)" class="btn btn-secondary">Hủy</button><span
+        class="helper filler"></span><button type="submit" onclick="saveChanges('@Model.Contract.Id')"
+        class="btn-right btn btn-primary">Lưu lại</button>
+</div>
+
+<script>
+    function discardChanges(e) {
+        swal({
+            title: "",
+            text: "Bạn có muốn hủy những thay đổi?",
+            icon: "warning",
+            buttons: ["Quay lại", "Tiếp tục"],
+            dangerMode: true,
+        })
+            .then((discard) => {
+                if (discard) {
+                    window.location = "/Booking";
+                } else {
+
+                }
+            })
+    };
+
+    function saveChanges(param) {
+        var data = $('form').serialize();
+        console.log(data);
+        $.ajax({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            },
+            type: "POST",
+            url: "/Booking/Details?handler=ajax",
+            data: $('form').serialize(),
+            success: function (e) {
+                console.log(e);
+                swal({
+                    title: "",
+                    text: "Cập nhật thành công!",
+                    icon: "success",
+                    timer: 850,
+                    buttons: false,
+
+                })
+                    .then(() => {
+                        window.location = "/Booking";
+                    });
+
+            },
+            error: function (e) {
+                console.log(e);
+                swal({
+                    icon: "warning",
+                    title: "",
+                    text: "Cập nhật thất bại!",
+                    dangerMode: true,
+                    timer: 850,
+                    buttons: false,
+                })
+            }
+        });
+
+    }
+</script>
+
+
+<style>
+    tr {
+        display: table-row;
+    }
+    td {
+        display: table-cell;
+        vertical-align: middle!important;
+    }
+    .form-control {
+        box-shadow: none;
+        border-radius: 0px;
+        padding-top: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+        border: 1px solid #e9edf1;
+        border-top: 0!important;
+        border-left: 0!important;
+        border-right: 0!important;
+        padding-bottom: 0px;
+        border-bottom-width: unset;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+    }
+
+    button:focus {
+        box-shadow: 0 0 0 0.2rem rgb(234, 212, 18);
+    }
+
+    .btn-right {
+        float: right;
+    }
+
+    .btn-content {
+        margin-top: 0.85em;
+        margin-bottom: 0.25em;
+        display: inline-block;
+        width: 100%;
+    }
+
+    img {
+        min-width: 150px;
+        max-width: 300px;
+        width: 75%;
+    }
+
+    .list {
+        padding-left: 0;
+        list-style: none;
+    }
+
+    .toggle {
+        display: block;
+    }
+
+    a:hover {
+        text-decoration: none;
+    }
+</style>

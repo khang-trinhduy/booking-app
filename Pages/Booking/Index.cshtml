@@ -1,0 +1,83 @@
+@page
+@model BookingApp.Pages.Booking.IndexModel
+
+@{
+ViewData["Title"] = "Index";
+}
+
+<h1>Khách hàng</h1>
+
+<ul class="fa-ul">
+    @foreach (var item in Model.Contract)
+    {
+    <li class="list-items">
+        <a class="li-link" asp-page="./Details" asp-route-Id="@item.Id" rel="modal:open">
+            <span class="li-content">
+                <i class="fas fa-list-ul fa-user" aria-hidden="true">
+                    <span class="list-item header">@item.FullName</span>
+                </i>
+                <div class="list-item detail">
+                    <span>@item.PhoneNumber</span><button type="button" class="btn"
+                        style="float: right"><span><i class="fas fa-user-edit"></i></span></button>
+                </div>
+            </span>
+            <!-- <span style="height: 100%"><img src="" alt=""></span> -->
+        </a>
+    </li>
+    }
+</ul>
+
+<style>
+    .btn:focus {
+        box-shadow: 0 0 0 0.2rem rgb(234, 212, 18);
+    }
+    button>span {
+        color: dimgray;
+    }
+    .fas.fa-user {
+        color: #d44f66;
+    }
+
+    .li-content {
+        display: block;
+    }
+    .li-link, .li-content {
+        width: 100%;
+        height: 100%;
+    }
+
+    .li-link:hover {
+        text-decoration: none;
+    }
+
+    .list-item.detail {
+        color: dimgray;
+    }
+
+    .list-item.header {
+        display: inline;
+        color: dimgray;
+    }
+
+    li:hover {
+        background-color: #f0f0f0;
+    }
+
+    .fa-ul {
+        margin-left: 0em;
+        /*2.5*/
+    }
+
+    .list-items {
+        padding: 7.5px;
+        position: relative;
+        overflow: auto;
+
+    }
+
+    .modal {
+        overflow: unset;
+        height: unset;
+        position: relative!important;
+    }
+</style>
